@@ -12,6 +12,14 @@ const { PORT = 3001 } = process.env;
 const router = require("./routes");
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: "686df06d39b0e803d6a07c83",
+  };
+  next();
+});
+
 app.use("/", router);
 
 app.listen(PORT, () => {
