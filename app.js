@@ -6,11 +6,13 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const express = require("express");
+
 const app = express();
 const { PORT = 3001 } = process.env;
 
 const router = require("./routes");
 
+// blank line to satisfy ESLint
 app.use(express.json());
 
 app.use((req, res, next) => {

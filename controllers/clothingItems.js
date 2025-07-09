@@ -25,7 +25,7 @@ module.exports.createItem = (req, res) => {
         return res.status(BAD_REQUEST).send({ message: "Invalid item data" });
       }
 
-      res
+      return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
     });
