@@ -6,7 +6,6 @@ const {
   NOT_FOUND,
   SERVER_ERROR,
   CONFLICT,
-  UNAUTHORIZED,
 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
@@ -17,7 +16,7 @@ module.exports.getCurrentUser = (req, res) => {
     .orFail(() => {
       const err = new Error("User not found");
       err.statusCode = NOT_FOUND;
-      throw err;
+      return Promise.reject(err);
     })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -29,7 +28,7 @@ module.exports.getCurrentUser = (req, res) => {
           ? "An error has occurred on the server"
           : err.message;
 
-      res.status(status).send({ message });
+      return res.status(status).send({ message });
     });
 };
 
@@ -42,13 +41,13 @@ module.exports.createUser = (req, res) => {
       .send({ message: "Email and password are required." });
   }
 
-  bcrypt
+  return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userData = user.toObject();
       delete userData.password;
-      res.status(201).send(userData);
+      return res.status(201).send(userData);
     })
     .catch((err) => {
       console.error(err);
@@ -58,7 +57,6 @@ module.exports.createUser = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid user data" });
       }
-
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
@@ -73,11 +71,13 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
       console.error(err);
-      res.status(BAD_REQUEST).send({ message: "Incorrect email or password" });
+      return res
+        .status(BAD_REQUEST)
+        .send({ message: "Incorrect email or password" });
     });
 };
 
@@ -109,6 +109,6 @@ module.exports.updateUser = (req, res) => {
           ? "An error has occurred on the server"
           : err.message;
 
-      res.status(status).send({ message });
+      return res.status(status).send({ message });
     });
 };
