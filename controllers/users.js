@@ -16,11 +16,15 @@ module.exports.getCurrentUser = (req, res) => {
     .orFail(() => {
       const err = new Error("User not found");
       err.statusCode = NOT_FOUND;
-      return Promise.reject(err);
+      throw err;
     })
     .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
+
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
+      }
 
       const status = err.statusCode || SERVER_ERROR;
       const message =
@@ -66,7 +70,13 @@ module.exports.createUser = (req, res) => {
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "Email and password are required." });
+  }
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -75,9 +85,14 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
+
+      if (err.message === "Incorrect email or password") {
+        return res.status(401).send({ message: "Incorrect email or password" });
+      }
+
       return res
-        .status(BAD_REQUEST)
-        .send({ message: "Incorrect email or password" });
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -101,6 +116,10 @@ module.exports.updateUser = (req, res) => {
 
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid user data" });
+      }
+
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
       }
 
       const status = err.statusCode || SERVER_ERROR;
