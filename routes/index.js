@@ -8,7 +8,7 @@ router.use("/items", itemRoutes);
 router.get("/users/me", getCurrentUser);
 router.patch("/users/me", updateUser);
 
-router.use("*", (req, res) => {
+router.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
