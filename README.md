@@ -37,3 +37,5 @@ jsonwebtoken for token management
 validator for input validation
 
 cors for cross-origin requests
+
+Domain name - https://weatherapp.jumpingcrab.com
