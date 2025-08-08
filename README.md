@@ -38,4 +38,4 @@ validator for input validation
 
 cors for cross-origin requests
 
-Domain name - https://weatherapp.jumpingcrab.com
+Domain name - https://www.weatherapp.jumpingcrab.com
