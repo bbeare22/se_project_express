@@ -11,8 +11,7 @@ const { JWT_SECRET } = require("../utils/config");
 
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
-
-  User.findById(userId)
+  return User.findById(userId)
     .orFail(() => new NotFoundError("User not found"))
     .then((user) => res.send(user))
     .catch((err) => {
@@ -25,12 +24,10 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
-
   if (!email || !password) {
     return next(new BadRequestError("Email and password are required."));
   }
-
-  bcrypt
+  return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
@@ -51,11 +48,9 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return next(new BadRequestError("Email and password are required."));
   }
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -74,8 +69,7 @@ module.exports.login = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
   const userId = req.user._id;
-
-  User.findByIdAndUpdate(
+  return User.findByIdAndUpdate(
     userId,
     { name, avatar },
     { new: true, runValidators: true }

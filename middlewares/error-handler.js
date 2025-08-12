@@ -4,10 +4,9 @@ const { NODE_ENV } = require("../utils/config");
 
 module.exports = (err, req, res, next) => {
   if (isCelebrateError && isCelebrateError(err)) {
-    const details = [];
-    for (const [, value] of err.details) {
-      details.push(...value.details.map((d) => d.message));
-    }
+    const details = Array.from(err.details.values()).flatMap((seg) =>
+      seg.details.map((d) => d.message)
+    );
     return res.status(400).send({ message: "Validation failed", details });
   }
 
@@ -32,6 +31,5 @@ module.exports = (err, req, res, next) => {
   if (NODE_ENV !== "production") {
     console.error("Unhandled error:", err);
   }
-
   return res.status(500).send({ message: "Internal Server Error" });
 };
