@@ -8,10 +8,20 @@ Built with **Express**, **MongoDB**, and **JWT authentication**.
 ## 🚀 Overview
 
 This backend powers the **WTWR weather app**, allowing users to:
-- Register and log in with secure JWT-based authentication  
-- Manage clothing items (create, like/unlike, delete)  
-- Retrieve and update user profiles  
+
+- Register and log in with secure JWT-based authentication
+- Manage clothing items (create, like/unlike, delete)
+- Retrieve and update user profiles
 - Connect with the front-end client for full-stack functionality
+
+---
+
+## 🌐 Live Deployment
+
+- **Frontend:** https://www.weatherapp.jumpingcrab.com
+- **Backend API:** https://api.weatherapp.jumpingcrab.com
+
+All routes below can be tested at `https://api.weatherapp.jumpingcrab.com` using Postman or your browser.
 
 ---
 
@@ -32,7 +42,7 @@ This backend powers the **WTWR weather app**, allowing users to:
 
 ```bash
 git clone https://github.com/bbeare22/se_project_express
-cd se_project_express-main
+cd se_project_express
 npm install
 ```
 
@@ -48,26 +58,39 @@ JWT_SECRET_DEV=your-dev-secret
 NODE_ENV=development
 ```
 
+For production (your deployment), the environment may look like:
+
+```bash
+PORT=3001
+MONGO_URL=<your-mongo-connection-string>
+JWT_SECRET=supersecretkey
+NODE_ENV=production
+CLIENT_URL=https://www.weatherapp.jumpingcrab.com
+```
+
 ### 3️⃣ Start the Server
 
 **Development mode (with nodemon):**
+
 ```bash
 npm run dev
 ```
 
 **Production mode:**
+
 ```bash
 npm start
 ```
 
-The server will run at [http://localhost:3001](http://localhost:3001).
+The server will run locally at [http://localhost:3001](http://localhost:3001)  
+or in production at https://api.weatherapp.jumpingcrab.com.
 
 ---
 
 ## 📦 Project Structure
 
 ```
-se_project_express-main/
+se_project_express/
 ├── app.js                 # Main entry
 ├── controllers/           # Request handlers
 │   ├── clothingItems.js
@@ -87,18 +110,20 @@ se_project_express-main/
 ## 🔑 API Endpoints
 
 ### 👤 Users
-| Method | Endpoint | Description |
-|---------|-----------|-------------|
-| `GET` | `/users/me` | Get current user profile |
-| `PATCH` | `/users/me` | Update user info |
+
+| Method  | Endpoint    | Description              |
+| ------- | ----------- | ------------------------ |
+| `GET`   | `/users/me` | Get current user profile |
+| `PATCH` | `/users/me` | Update user info         |
 
 ### 👕 Clothing Items
-| Method | Endpoint | Description |
-|---------|-----------|-------------|
-| `POST` | `/items` | Create new clothing item (auth required) |
-| `DELETE` | `/items/:itemId` | Delete clothing item (auth required) |
-| `PUT` | `/items/:itemId/likes` | Like item (auth required) |
-| `DELETE` | `/items/:itemId/likes` | Unlike item (auth required) |
+
+| Method   | Endpoint               | Description                              |
+| -------- | ---------------------- | ---------------------------------------- |
+| `POST`   | `/items`               | Create new clothing item (auth required) |
+| `DELETE` | `/items/:itemId`       | Delete clothing item (auth required)     |
+| `PUT`    | `/items/:itemId/likes` | Like item (auth required)                |
+| `DELETE` | `/items/:itemId/likes` | Unlike item (auth required)              |
 
 ---
 
@@ -107,8 +132,9 @@ se_project_express-main/
 - **JWT-based authentication**
 - **Input validation** with Celebrate/Joi
 - **Password hashing** with bcryptjs
-- **CORS** middleware configured
-- **Error handling** via centralized middleware
+- **CORS** middleware configured to allow `https://www.weatherapp.jumpingcrab.com`
+- **Helmet** for HTTP header security
+- **Centralized error handling**
 - **Custom error classes** for clear API responses
 
 ---
@@ -119,6 +145,7 @@ se_project_express-main/
 PORT=3001
 MONGO_URL=mongodb://127.0.0.1:27017/wtwr_db
 JWT_SECRET=supersecretkey
+CLIENT_URL=https://www.weatherapp.jumpingcrab.com
 NODE_ENV=production
 ```
 
@@ -126,11 +153,11 @@ NODE_ENV=production
 
 ## 🧠 Developer Scripts
 
-| Command | Description |
-|----------|-------------|
-| `npm run dev` | Start with nodemon for development |
-| `npm start` | Start production server |
-| `npm run lint` | Run ESLint checks |
+| Command        | Description                        |
+| -------------- | ---------------------------------- |
+| `npm run dev`  | Start with nodemon for development |
+| `npm start`    | Start production server            |
+| `npm run lint` | Run ESLint checks                  |
 
 ---
 
@@ -148,10 +175,11 @@ eslint, eslint-config-airbnb-base, eslint-config-prettier, eslint-plugin-import,
 
 Use **Postman** or **cURL** to test endpoints:  
 Example:
+
 ```bash
-curl -X GET http://localhost:3001/users/me -H "Authorization: Bearer <token>"
+curl -X GET https://api.weatherapp.jumpingcrab.com/users/me -H "Authorization: Bearer <token>"
 ```
 
 ---
 
-✨ *WTWR Backend — designed to keep your wardrobe weather-ready.*
+✨ _WTWR Backend — keeping your wardrobe weather-ready._
