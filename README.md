@@ -31,7 +31,7 @@ This backend powers the **WTWR weather app**, allowing users to:
 ### 1️⃣ Clone and Install Dependencies
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/bbeare22/se_project_express
 cd se_project_express-main
 npm install
 ```
